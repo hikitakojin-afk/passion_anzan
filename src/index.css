@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DotGothic16&family=Rammetto+One&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-kids-green text-kids-black font-sans leading-relaxed m-0 p-0 overflow-x-hidden min-h-screen w-screen;
+  }
+
+  #root {
+    @apply h-full w-full;
+  }
+}
+
+@layer utilities {
+  .text-stroke-black {
+    text-shadow:
+      -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000,
+      0px -1px 0 #000, 0px 1px 0 #000, -1px 0px 0 #000, 1px 0px 0 #000;
+  }
+
+  .text-stroke-thick {
+    text-shadow:
+      -3px -3px 0 #000, 0px -3px 0 #000, 3px -3px 0 #000,
+      3px 0px 0 #000, 3px 3px 0 #000, 0px 3px 0 #000,
+      -3px 3px 0 #000, -3px 0px 0 #000;
+  }
+
+  .kids-bubble {
+    @apply bg-kids-black text-white border-[3px] border-kids-yellow;
+  }
+
+  .kids-button {
+    @apply bg-kids-yellow text-kids-black font-bold border-[3px] border-kids-black rounded-[30px] shadow-[0px_4px_0px_#000] hover:translate-y-1 hover:shadow-none transition-all active:bg-[#e6be17];
+  }
+
+  .text-shadow-kids {
+    text-shadow: 2px 2px 0px #000;
+  }
+
+  /* Text Shadow Combinations to preserve both stroke and drop-shadow */
+  .text-stroke-black.text-shadow-kids {
+    text-shadow:
+      -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000,
+      0px -1px 0 #000, 0px 1px 0 #000, -1px 0px 0 #000, 1px 0px 0 #000,
+      3px 3px 0px #000;
+  }
+
+  .text-stroke-thick.text-shadow-kids {
+    text-shadow:
+      -3px -3px 0 #000, 0px -3px 0 #000, 3px -3px 0 #000,
+      3px 0px 0 #000, 3px 3px 0 #000, 0px 3px 0 #000,
+      -3px 3px 0 #000, -3px 0px 0 #000,
+      5px 5px 0px #000;
+  }
+}
