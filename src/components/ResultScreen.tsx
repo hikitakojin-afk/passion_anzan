@@ -58,7 +58,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ result, onRetry, onBack, le
         `}
         >
           <div className="absolute -top-6 md:-top-8 left-1/2 -translate-x-1/2 bg-white px-6 md:px-8 py-1 md:py-2 rounded-full border-[3px] border-kids-black shadow-[0px_4px_0px_#000]">
-            <h2 className={`text-3xl md:text-7xl font-display text-shadow-kids tracking-wider ${result.isCorrect ? 'text-kids-pink text-stroke-thick' : 'text-kids-black text-stroke-black'}`}>
+            <h2 className={`text-3xl md:text-7xl font-display text-shadow-kids tracking-wider ${result.isCorrect ? 'text-kids-pink text-stroke-thick' : 'text-[#ff4757] font-black'}`}>
               {result.isCorrect ? 'CLEAR!' : 'FAILED'}
             </h2>
           </div>
@@ -91,19 +91,26 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ result, onRetry, onBack, le
                   const user = result.userPassionCounts[i];
                   const isPassCorrect = expected === user;
                   return (
-                    <div key={i} className={`flex flex-col items-center p-3 md:p-4 border-[3px] border-kids-black rounded-2xl relative ${isPassCorrect ? 'bg-kids-pink/20' : 'bg-gray-100'}`}>
-                      {!isPassCorrect && (
-                        <div className="absolute -top-3 -right-3 bg-[#ff4757] text-white font-black px-2 py-0.5 md:px-3 md:py-1 rounded-full border-[2px] border-kids-black transform rotate-12 z-10 shadow-[2px_2px_0px_#000] text-sm md:text-base">
-                          正解:{expected}回
-                        </div>
-                      )}
+                    <div key={i} className={`flex flex-col items-center p-3 md:p-4 border-[3px] border-kids-black rounded-2xl relative ${isPassCorrect ? 'bg-white' : 'bg-gray-100'}`}>
                       <img
                         src={passionImages[i]}
-                        className="w-16 h-16 md:w-24 md:h-24 object-cover border-[3px] border-white rounded-xl shadow-md mb-2 md:mb-3 bg-white"
+                        className="w-16 h-16 md:w-24 md:h-24 object-cover border-[3px] border-white rounded-xl shadow-sm mb-1 bg-white"
                         alt={`Passion ${i}`}
                       />
-                      <div className={`text-2xl md:text-3xl font-black text-stroke-black ${isPassCorrect ? 'text-kids-pink text-shadow-kids' : 'text-kids-gray line-through opacity-80'}`}>
-                        {user}回
+                      <div className="flex flex-col items-center w-full mt-1">
+                        <span className="text-xs md:text-sm font-bold text-gray-400">あなたの回答</span>
+                        <div className={`text-2xl md:text-3xl font-black ${isPassCorrect ? 'text-kids-pink text-shadow-kids' : 'text-kids-gray line-through opacity-80'}`}>
+                          {user}回
+                        </div>
+                        {!isPassCorrect ? (
+                          <div className="mt-1 bg-[#ff4757] text-white font-black px-2 py-0.5 md:px-3 md:py-1 rounded-full border-[2px] border-kids-black shadow-[2px_2px_0px_#000] text-xs md:text-sm w-full text-center truncate">
+                            正解: {expected}回
+                          </div>
+                        ) : (
+                          <div className="mt-1 text-kids-pink font-black text-xs md:text-sm tracking-wider">
+                            大正解！
+                          </div>
+                        )}
                       </div>
                     </div>
                   )

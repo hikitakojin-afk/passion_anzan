@@ -10,9 +10,6 @@ let masterVolume = 0.5;
 
 export function setMasterVolume(vol: number) {
     masterVolume = Math.max(0, Math.min(1, vol));
-    if (currentPassionAudio) {
-        currentPassionAudio.volume = masterVolume;
-    }
 }
 
 export function getMasterVolume() {
@@ -157,24 +154,52 @@ export function playBeep(freq = 800, type: OscillatorType = 'sine', vol = 0.1, d
     osc.stop(ctx.currentTime + duration);
 }
 
-let currentPassionAudio: HTMLAudioElement | null = null;
+let passionAudioBuffer: AudioBuffer | null = null;
+let currentPassionSource: AudioBufferSourceNode | null = null;
+
+// Preload the passion audio buffer globally as soon as the module loads
+if (typeof window !== 'undefined') {
+    fetch(import.meta.env.BASE_URL + 'audio/passion/passion.mp3')
+        .then(res => res.arrayBuffer())
+        .then(arrayBuffer => {
+            const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+            return tempCtx.decodeAudioData(arrayBuffer);
+        })
+        .then(buffer => {
+            passionAudioBuffer = buffer;
+        })
+        .catch(e => console.error("Error loading passion audio buffer:", e));
+}
 
 export function playPassionSound() {
-    stopPassionSound(); // Stop any currently playing one
+    stopPassionSound();
 
-    // Create new audio element so multiple can overlap if needed, though we will track the latest
-    const audio = new Audio(import.meta.env.BASE_URL + 'audio/passion/passion.mp3');
-    audio.volume = masterVolume;
-    audio.play().catch(e => console.error("Error playing passion audio:", e));
+    if (passionAudioBuffer && audioCtx) {
+        const source = audioCtx.createBufferSource();
+        source.buffer = passionAudioBuffer;
 
-    currentPassionAudio = audio;
+        const gainNode = audioCtx.createGain();
+        gainNode.gain.value = masterVolume;
+
+        source.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        source.start(0);
+        currentPassionSource = source;
+    } else {
+        // Fallback if the buffer isn't loaded yet
+        const audio = new Audio(import.meta.env.BASE_URL + 'audio/passion/passion.mp3');
+        audio.volume = masterVolume;
+        audio.play().catch(() => { });
+    }
 }
 
 export function stopPassionSound() {
-    if (currentPassionAudio) {
-        currentPassionAudio.pause();
-        currentPassionAudio.currentTime = 0;
-        currentPassionAudio = null;
+    if (currentPassionSource) {
+        try {
+            currentPassionSource.stop();
+        } catch (e) { }
+        currentPassionSource = null;
     }
 }
 
